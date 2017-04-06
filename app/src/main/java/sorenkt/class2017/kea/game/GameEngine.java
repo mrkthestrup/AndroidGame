@@ -59,15 +59,7 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         surfaceView = new SurfaceView(this);
         setContentView(surfaceView);
         surfaceHolder = surfaceView.getHolder();
-
-        if(surfaceView.getWidth() > surfaceView.getHeight())
-        {
-            setOffscreenSurface(480,320);                                                           //vandret screen
-        }
-        else
-        {
-            setOffscreenSurface(320,480);                                                           //lodret screen
-        }
+        fixTheScreen();
         touchHandler = new MultiTouchHandler(surfaceView,touchEventBuffer,touchEventPool);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).size() != 0);                    //checks if the device has this type of Hardware
@@ -167,6 +159,18 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         canvas.drawColor(color);
     }
 
+    public  void fixTheScreen()
+    {
+        if(surfaceView.getWidth() > surfaceView.getHeight())
+        {
+            setOffscreenSurface(480,320);                                                           //vandret screen
+        }
+        else
+        {
+            setOffscreenSurface(320,480);                                                           //lodret screen
+        }
+
+    }
 
     public void setOffscreenSurface(int with, int height)
     {
@@ -295,6 +299,7 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
         long currTime = lastTime;
         while(true)                                                                                 //makes a loop forever
         {
+            fixTheScreen();
             synchronized (stateChanges)
             {
                 for(int i = 0; i<stateChanges.size(); i++)
@@ -396,5 +401,6 @@ public abstract class GameEngine extends Activity implements Runnable, SensorEve
                 manager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_GAME);
             }
         }
+        fixTheScreen();
     }
 }
